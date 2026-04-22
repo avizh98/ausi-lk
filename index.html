@@ -354,17 +354,7 @@
     .stock-chip.out .sdot { background: var(--red); }
 
     .card.out-of-stock {
-      opacity: .6;
       position: relative;
-    }
-
-    .card.out-of-stock::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: rgba(245,243,239,.3);
-      border-radius: var(--r);
-      pointer-events: none;
     }
 
     .view-toggle {
@@ -748,6 +738,11 @@
         </svg>
         <input type="text" id="sq-pharma" placeholder="Search name or code…" oninput="renderGrid('pharma')">
       </div>
+      <select class="fsel" id="sf-pharma" onchange="renderGrid('pharma')">
+        <option value="all">All Stock</option>
+        <option value="in">✅ In Stock</option>
+        <option value="out">❌ Out of Stock</option>
+      </select>
       <select class="fsel" id="ss-pharma" onchange="renderGrid('pharma')">
         <option value="def">Default order</option>
         <option value="asc">Price: Low → High</option>
@@ -779,6 +774,11 @@
         </svg>
         <input type="text" id="sq-super" placeholder="Search name or code…" oninput="renderGrid('super')">
       </div>
+      <select class="fsel" id="sf-super" onchange="renderGrid('super')">
+        <option value="all">All Stock</option>
+        <option value="in">✅ In Stock</option>
+        <option value="out">❌ Out of Stock</option>
+      </select>
       <select class="fsel" id="ss-super" onchange="renderGrid('super')">
         <option value="def">Default order</option>
         <option value="asc">Price: Low → High</option>
@@ -932,8 +932,12 @@
     function renderGrid(type) {
       const q = document.getElementById('sq-' + type).value.toLowerCase();
       const s = document.getElementById('ss-' + type).value;
+      const sf = document.getElementById('sf-' + type).value;
       let items = (_data[type] || []).slice();
       if (q) items = items.filter(i => (i.name || '').toLowerCase().includes(q) || (i.code || '').toLowerCase().includes(q) || (i.brand || '').toLowerCase().includes(q));
+      // Stock filter
+      if (sf === 'in') items = items.filter(i => i.inStock !== false && (parseInt(i.quantity) || 0) > 0);
+      else if (sf === 'out') items = items.filter(i => i.inStock === false || (parseInt(i.quantity) || 0) === 0);
       if (s === 'asc') items.sort((a, b) => (a.maxPrice || 0) - (b.maxPrice || 0));
       else if (s === 'desc') items.sort((a, b) => (b.maxPrice || 0) - (a.maxPrice || 0));
       else if (s === 'az') items.sort((a, b) => a.name.localeCompare(b.name));
