@@ -1099,6 +1099,11 @@
             <button class="ftab" onclick="setFilt('pharma',this)">Health &amp; Care</button>
             <button class="ftab" onclick="setFilt('super',this)">Grocery &amp; Food</button>
           </div>
+          <div class="ftabs" id="stock-ftabs">
+            <button class="ftab on" onclick="setStockFilt('all',this)">All Stock</button>
+            <button class="ftab" onclick="setStockFilt('in',this)">✅ In Stock</button>
+            <button class="ftab" onclick="setStockFilt('out',this)">❌ Out</button>
+          </div>
           <button class="addbtn" onclick="openDrawer()">+ Add product</button>
         </div>
         <div class="cbar" id="acbar"></div>
@@ -1360,6 +1365,7 @@
 
     let _db = { pharma: [], super: [], settings: {} };
     let _filt = 'all';
+    let _stockFilt = 'all';
     let _editIdx = null;
 
     // ── AUTH ──────────────────────────────────────────────────────────
@@ -1475,6 +1481,13 @@
       renderTable();
     }
 
+    function setStockFilt(f, btn) {
+      _stockFilt = f;
+      document.getElementById('stock-ftabs').querySelectorAll('.ftab').forEach(b => b.classList.remove('on'));
+      btn.classList.add('on');
+      renderTable();
+    }
+
     function renderTable() {
       const q = document.getElementById('asq').value.toLowerCase();
       let rows = [];
@@ -1484,6 +1497,10 @@
           if (q && !(p.name || '').toLowerCase().includes(q) &&
             !(p.code || '').toLowerCase().includes(q) &&
             !(p.brand || '').toLowerCase().includes(q)) return;
+          // Stock filter
+          const isInStock = p.inStock !== false && (parseInt(p.quantity) || 0) > 0;
+          if (_stockFilt === 'in' && !isInStock) return;
+          if (_stockFilt === 'out' && isInStock) return;
           rows.push({ ...p, cat, idx });
         });
       });
