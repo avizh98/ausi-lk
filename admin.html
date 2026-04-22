@@ -1,0 +1,1762 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AUSI.LK — Admin</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Syne:wght@400;600;700&family=Instrument+Sans:wght@400;500&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f5f3ef;
+      --surface: #fff;
+      --border: #ddd9d1;
+      --text: #1c1a17;
+      --text2: #6b6660;
+      --text3: #a09c97;
+      --green: #1a5c3a;
+      --green-light: #edf5f0;
+      --green-mid: #2d7a52;
+      --red: #b83224;
+      --red-light: #fdf1ef;
+      --gold: #a07820;
+      --gold-light: #fdf8ed;
+      --r: 10px;
+      --rsm: 6px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Instrument Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* LOGIN */
+    .login-wrap {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      background: var(--text);
+    }
+
+    .login-box {
+      background: var(--surface);
+      border-radius: 14px;
+      padding: 2.5rem;
+      width: 100%;
+      max-width: 360px;
+    }
+
+    .login-logo {
+      font-family: 'Syne', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .login-logo em {
+      color: var(--green);
+      font-style: normal;
+    }
+
+    .login-sub {
+      font-size: 13px;
+      color: var(--text3);
+      margin-bottom: 2rem;
+    }
+
+    .lf {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-bottom: 1rem;
+    }
+
+    .lf label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text2);
+    }
+
+    .lf input {
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--rsm);
+      font-size: 14px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Instrument Sans', sans-serif;
+      outline: none;
+    }
+
+    .lf input:focus {
+      border-color: var(--green);
+    }
+
+    .lbtn {
+      width: 100%;
+      padding: 12px;
+      background: var(--green);
+      color: #fff;
+      border: none;
+      border-radius: var(--rsm);
+      font-family: 'Syne', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: .5rem;
+      transition: background .15s;
+    }
+
+    .lbtn:hover {
+      background: var(--green-mid);
+    }
+
+    .lerr {
+      font-size: 12px;
+      color: var(--red);
+      margin-top: .5rem;
+      display: none;
+    }
+
+    /* ADMIN SHELL */
+    .admin {
+      display: none;
+    }
+
+    .admin.on {
+      display: block;
+    }
+
+    .aheader {
+      background: var(--text);
+      color: #fff;
+      padding: 0 1.5rem;
+      height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .alogo {
+      font-family: 'Syne', sans-serif;
+      font-size: 17px;
+      font-weight: 700;
+    }
+
+    .alogo em {
+      color: #6ee7a8;
+      font-style: normal;
+    }
+
+    .alogo span {
+      font-size: 11px;
+      color: rgba(255, 255, 255, .35);
+      margin-left: 8px;
+      font-family: 'Instrument Sans', sans-serif;
+    }
+
+    .hbtn {
+      padding: 7px 13px;
+      border-radius: var(--rsm);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: 'Instrument Sans', sans-serif;
+      border: 1px solid rgba(255, 255, 255, .25);
+      background: transparent;
+      color: #fff;
+      transition: all .15s;
+    }
+
+    .hbtn:hover {
+      background: rgba(255, 255, 255, .1);
+    }
+
+    /* STATS + NAV */
+    .sbar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: .85rem 1.5rem;
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .sitem .sn {
+      font-family: 'Inter', sans-serif;
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--green);
+      letter-spacing: -0.5px;
+    }
+
+    .sitem .sl {
+      font-size: 11px;
+      color: var(--text3);
+      text-transform: uppercase;
+      letter-spacing: .4px;
+    }
+
+    .page-tabs {
+      margin-left: auto;
+      display: flex;
+      gap: 6px;
+    }
+
+    .ptab {
+      padding: 7px 16px;
+      border-radius: var(--rsm);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'Syne', sans-serif;
+      border: 1px solid rgba(255, 255, 255, .2);
+      background: transparent;
+      color: rgba(255, 255, 255, .55);
+      transition: all .15s;
+    }
+
+    .ptab.active {
+      background: rgba(255, 255, 255, .18);
+      color: #fff;
+      border-color: rgba(255, 255, 255, .4);
+    }
+
+    .ptab:hover:not(.active) {
+      color: #fff;
+    }
+
+    /* PRODUCTS PAGE */
+    .amain {
+      padding: 1.5rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+
+    .sb {
+      flex: 1;
+      min-width: 180px;
+      position: relative;
+    }
+
+    .sb input {
+      width: 100%;
+      padding: 9px 14px 9px 34px;
+      border: 1px solid var(--border);
+      border-radius: var(--rsm);
+      font-size: 13px;
+      background: var(--surface);
+      color: var(--text);
+      font-family: 'Instrument Sans', sans-serif;
+      outline: none;
+    }
+
+    .sb input:focus {
+      border-color: var(--green);
+    }
+
+    .si {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text3);
+    }
+
+    .ftabs {
+      display: flex;
+      border: 1px solid var(--border);
+      border-radius: var(--rsm);
+      overflow: hidden;
+    }
+
+    .ftab {
+      padding: 8px 13px;
+      border: none;
+      background: none;
+      font-size: 12px;
+      cursor: pointer;
+      color: var(--text2);
+      font-family: 'Instrument Sans', sans-serif;
+      transition: all .15s;
+    }
+
+    .ftab.on {
+      background: var(--green);
+      color: #fff;
+    }
+
+    .addbtn {
+      padding: 9px 18px;
+      background: var(--green);
+      color: #fff;
+      border: none;
+      border-radius: var(--rsm);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'Syne', sans-serif;
+      white-space: nowrap;
+      transition: background .15s;
+    }
+
+    .addbtn:hover {
+      background: var(--green-mid);
+    }
+
+    .cbar {
+      font-size: 12px;
+      color: var(--text3);
+      padding: .4rem 0;
+    }
+
+    /* TABLE */
+    .tw {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      overflow: hidden;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th {
+      background: var(--bg);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      color: var(--text3);
+      padding: 10px 14px;
+      text-align: left;
+      font-weight: 500;
+      border-bottom: 1px solid var(--border);
+    }
+
+    td {
+      padding: 11px 14px;
+      font-size: 13px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background: #faf9f7;
+    }
+
+    .tc {
+      font-family: 'Syne', sans-serif;
+      font-size: 10px;
+      color: var(--text3);
+      letter-spacing: .5px;
+    }
+
+    .tn {
+      font-weight: 500;
+      max-width: 260px;
+    }
+
+    .tbr {
+      font-size: 11px;
+      color: var(--text3);
+    }
+
+    .tp {
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      color: var(--green);
+      white-space: nowrap;
+      letter-spacing: -0.3px;
+    }
+
+    .ta {
+      font-size: 12px;
+      color: var(--text3);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: .4px;
+    }
+
+    .badge-pharma {
+      background: var(--green-light);
+      color: var(--green);
+    }
+
+    .badge-super {
+      background: var(--gold-light);
+      color: var(--gold);
+    }
+
+    /* STOCK BADGES */
+    .stock-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .3px;
+    }
+
+    .stock-in {
+      background: var(--green-light);
+      color: var(--green);
+    }
+
+    .stock-low {
+      background: var(--gold-light);
+      color: var(--gold);
+    }
+
+    .stock-out {
+      background: var(--red-light);
+      color: var(--red);
+    }
+
+    .stock-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .stock-in .stock-dot { background: var(--green); }
+    .stock-low .stock-dot { background: var(--gold); }
+    .stock-out .stock-dot { background: var(--red); }
+
+    /* Auto-gen code badge */
+    .auto-code-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 600;
+      background: linear-gradient(135deg, var(--green-light), #d8f0e3);
+      color: var(--green);
+      letter-spacing: .4px;
+      text-transform: uppercase;
+    }
+
+    .code-preview {
+      font-family: 'Syne', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--green);
+      background: var(--green-light);
+      padding: 8px 14px;
+      border-radius: var(--rsm);
+      text-align: center;
+      letter-spacing: 2px;
+      border: 1px dashed var(--green);
+    }
+
+    /* Stock toggle in drawer */
+    .stock-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .stock-row .df { flex: 1; }
+
+    .qty-input {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: var(--rsm);
+      overflow: hidden;
+      background: var(--bg);
+    }
+
+    .qty-btn {
+      width: 36px;
+      height: 36px;
+      border: none;
+      background: none;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      color: var(--text2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background .15s;
+    }
+
+    .qty-btn:hover {
+      background: var(--border);
+    }
+
+    .qty-val {
+      width: 50px;
+      text-align: center;
+      border: none;
+      border-left: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+      font-size: 14px;
+      font-weight: 600;
+      font-family: 'Syne', sans-serif;
+      padding: 8px 4px;
+      background: var(--surface);
+      color: var(--text);
+      outline: none;
+    }
+
+    .ra {
+      display: flex;
+      gap: 6px;
+    }
+
+    .ebtn {
+      padding: 6px 12px;
+      border-radius: var(--rsm);
+      font-size: 12px;
+      cursor: pointer;
+      font-family: 'Instrument Sans', sans-serif;
+      transition: all .15s;
+    }
+
+    .ebtn-e {
+      border: 1px solid var(--border);
+      background: none;
+      color: var(--text2);
+    }
+
+    .ebtn-e:hover {
+      background: var(--bg);
+    }
+
+    .ebtn-d {
+      border: 1px solid var(--red);
+      background: var(--red-light);
+      color: var(--red);
+    }
+
+    .ebtn-d:hover {
+      background: #f9ddd9;
+    }
+
+    .etbl {
+      text-align: center;
+      padding: 3rem;
+      color: var(--text3);
+      font-size: 14px;
+    }
+
+    /* SETTINGS PAGE */
+    .settings-wrap {
+      padding: 1.5rem;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .sc {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .sc-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      color: var(--text3);
+      margin-bottom: 1rem;
+      padding-bottom: .6rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .tog-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: .7rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .tog-row:last-child {
+      border-bottom: none;
+    }
+
+    .tog-lbl {
+      font-size: 13px;
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .tog-sub {
+      font-size: 11px;
+      color: var(--text3);
+      margin-top: 2px;
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      margin-left: 5px;
+    }
+
+    .pill-n {
+      background: var(--green-light);
+      color: var(--green);
+    }
+
+    .pill-o {
+      background: var(--gold-light);
+      color: var(--gold);
+    }
+
+    .pill-m {
+      background: var(--red-light);
+      color: var(--red);
+    }
+
+    .ts {
+      position: relative;
+      width: 44px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+
+    .ts input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .tsl {
+      position: absolute;
+      inset: 0;
+      background: var(--border);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: .2s;
+    }
+
+    .tsl:before {
+      content: "";
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      left: 3px;
+      bottom: 3px;
+      background: #fff;
+      border-radius: 50%;
+      transition: .2s;
+    }
+
+    .ts input:checked+.tsl {
+      background: var(--green);
+    }
+
+    .ts input:checked+.tsl:before {
+      transform: translateX(20px);
+    }
+
+    .sf {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-bottom: .85rem;
+    }
+
+    .sf label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text2);
+    }
+
+    .sf input {
+      padding: 9px 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--rsm);
+      font-size: 13px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Instrument Sans', sans-serif;
+      outline: none;
+      width: 100%;
+    }
+
+    .sf input:focus {
+      border-color: var(--green);
+    }
+
+    .sf .hint {
+      font-size: 11px;
+      color: var(--text3);
+    }
+
+    .save-msg {
+      font-size: 12px;
+      color: var(--text3);
+      text-align: center;
+      padding: .5rem 0;
+      min-height: 24px;
+    }
+
+    /* DRAWER */
+    .doverlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .45);
+      z-index: 200;
+      display: none;
+      justify-content: flex-end;
+    }
+
+    .doverlay.on {
+      display: flex;
+    }
+
+    .drawer {
+      background: var(--surface);
+      width: 100%;
+      max-width: 480px;
+      height: 100vh;
+      overflow-y: auto;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: .85rem;
+    }
+
+    .dtitle {
+      font-family: 'Syne', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .dsub {
+      font-size: 13px;
+      color: var(--text3);
+    }
+
+    .df {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .df label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text2);
+    }
+
+    .df input,
+    .df select,
+    .df textarea {
+      padding: 9px 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--rsm);
+      font-size: 13px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Instrument Sans', sans-serif;
+      outline: none;
+      width: 100%;
+      transition: border-color .15s;
+    }
+
+    .df input:focus,
+    .df select:focus,
+    .df textarea:focus {
+      border-color: var(--green);
+    }
+
+    .df textarea {
+      resize: vertical;
+      min-height: 70px;
+    }
+
+    .df .hint {
+      font-size: 11px;
+      color: var(--text3);
+    }
+
+    .frow {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .sec-div {
+      height: 1px;
+      background: var(--border);
+    }
+
+    .sec-lbl {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      color: var(--text3);
+      font-weight: 600;
+    }
+
+    /* calc preview box */
+    .calc-prev {
+      background: var(--green-light);
+      border-radius: var(--rsm);
+      padding: .75rem 1rem;
+      font-size: 12px;
+      color: var(--green);
+      line-height: 1.7;
+      display: none;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    /* price output boxes */
+    .price-outs {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+    }
+
+    .pout {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--rsm);
+      padding: .6rem .75rem;
+    }
+
+    .pout-lbl {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      color: var(--text3);
+      margin-bottom: 4px;
+    }
+
+    .pout input {
+      background: transparent;
+      border: none;
+      padding: 0;
+      font-size: 15px;
+      font-weight: 700;
+      outline: none;
+      width: 100%;
+      font-family: 'Inter', sans-serif;
+      letter-spacing: -0.3px;
+    }
+
+    .pout.pn input {
+      color: var(--green);
+    }
+
+    .pout.po input {
+      color: var(--gold);
+    }
+
+    .pout.pm input {
+      color: var(--red);
+    }
+
+    .dbtns {
+      display: flex;
+      gap: 10px;
+      padding-top: .75rem;
+      border-top: 1px solid var(--border);
+      margin-top: auto;
+    }
+
+    .dbtn {
+      flex: 1;
+      padding: 12px;
+      border-radius: var(--rsm);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'Syne', sans-serif;
+      border: 1px solid;
+      transition: all .15s;
+    }
+
+    .dbtn-save {
+      background: var(--green);
+      color: #fff;
+      border-color: var(--green);
+    }
+
+    .dbtn-save:hover {
+      background: var(--green-mid);
+    }
+
+    .dbtn-cancel {
+      background: none;
+      color: var(--text2);
+      border-color: var(--border);
+    }
+
+    .dbtn-cancel:hover {
+      background: var(--bg);
+    }
+
+    .dbtn:disabled {
+      opacity: .6;
+      cursor: default;
+    }
+
+    /* CONFIRM */
+    .cov {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .5);
+      z-index: 300;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .cov.on {
+      display: flex;
+    }
+
+    .cbox {
+      background: var(--surface);
+      border-radius: 14px;
+      padding: 2rem;
+      max-width: 340px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .cbox h3 {
+      font-family: 'Syne', sans-serif;
+      margin-bottom: .5rem;
+    }
+
+    .cbox p {
+      font-size: 13px;
+      color: var(--text2);
+      margin-bottom: 1.5rem;
+    }
+
+    .cbtns {
+      display: flex;
+      gap: 10px;
+    }
+
+    /* TOAST */
+    .toast {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      z-index: 400;
+      background: var(--text);
+      color: #fff;
+      padding: 11px 17px;
+      border-radius: var(--r);
+      font-size: 13px;
+      font-weight: 500;
+      transform: translateY(60px);
+      opacity: 0;
+      transition: all .25s;
+      max-width: 300px;
+    }
+
+    .toast.on {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .toast.ok {
+      background: var(--green);
+    }
+
+    .toast.err {
+      background: var(--red);
+    }
+
+    .spin {
+      display: inline-block;
+      width: 13px;
+      height: 13px;
+      border: 2px solid rgba(255, 255, 255, .3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: sp .6s linear infinite;
+      vertical-align: middle;
+      margin-right: 5px;
+    }
+
+    @keyframes sp {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- LOGIN -->
+  <div class="login-wrap" id="login-wrap">
+    <div class="login-box">
+      <div class="login-logo">AUSI<em>.LK</em></div>
+      <div class="login-sub">Admin panel — authorised staff only</div>
+      <div class="lf">
+        <label>Password</label>
+        <input type="password" id="lpw" placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin()">
+      </div>
+      <button class="lbtn" onclick="doLogin()">Sign in</button>
+      <div class="lerr" id="lerr">Wrong password. Try again.</div>
+    </div>
+  </div>
+
+  <!-- ADMIN -->
+  <div class="admin" id="admin">
+
+    <header class="aheader">
+      <div class="alogo">AUSI<em>.LK</em><span>Admin</span></div>
+      <div style="display:flex;gap:8px">
+        <a href="index.html" target="_blank"><button class="hbtn">View catalog ↗</button></a>
+        <button class="hbtn" onclick="doLogout()">Sign out</button>
+      </div>
+    </header>
+
+    <div class="sbar">
+      <div class="sitem">
+        <div class="sn" id="sn-t">—</div>
+        <div class="sl">Total</div>
+      </div>
+      <div class="sitem">
+        <div class="sn" id="sn-p">—</div>
+        <div class="sl">Health &amp; Care</div>
+      </div>
+      <div class="sitem">
+        <div class="sn" id="sn-s">—</div>
+        <div class="sl">Grocery &amp; Food</div>
+      </div>
+      <div class="page-tabs">
+        <button class="ptab active" onclick="showPage('products',this)">Products</button>
+        <button class="ptab" onclick="showPage('settings',this)">⚙ Settings</button>
+      </div>
+    </div>
+
+    <!-- PRODUCTS PAGE -->
+    <div id="page-products">
+      <div class="amain">
+        <div class="toolbar">
+          <div class="sb">
+            <svg class="si" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2">
+              <circle cx="11" cy="11" r="8" />
+              <path d="m21 21-4.35-4.35" />
+            </svg>
+            <input type="text" id="asq" placeholder="Search products…" oninput="renderTable()">
+          </div>
+          <div class="ftabs">
+            <button class="ftab on" onclick="setFilt('all',this)">All</button>
+            <button class="ftab" onclick="setFilt('pharma',this)">Health &amp; Care</button>
+            <button class="ftab" onclick="setFilt('super',this)">Grocery &amp; Food</button>
+          </div>
+          <button class="addbtn" onclick="openDrawer()">+ Add product</button>
+        </div>
+        <div class="cbar" id="acbar"></div>
+        <div class="tw">
+          <table>
+            <thead>
+              <tr>
+                <th>Code</th>
+                <th>Product</th>
+                <th>Category</th>
+                <th>Stock</th>
+                <th>AUD</th>
+                <th>Prices (LKR)</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="atbody">
+              <tr>
+                <td colspan="7" class="etbl">Loading…</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- SETTINGS PAGE -->
+    <div id="page-settings" style="display:none">
+      <div class="settings-wrap">
+
+        <div class="sc">
+          <div class="sc-title">Which prices to show customers on the catalog</div>
+          <div class="tog-row">
+            <div>
+              <div class="tog-lbl">Normal price <span class="pill pill-n">Highest</span></div>
+              <div class="tog-sub">Standard selling price — Health 50% profit / Food 40% profit</div>
+            </div>
+            <label class="ts"><input type="checkbox" id="tog-normal" checked onchange="saveSettings()"><span
+                class="tsl"></span></label>
+          </div>
+          <div class="tog-row">
+            <div>
+              <div class="tog-lbl">Offer price <span class="pill pill-o">Mid</span></div>
+              <div class="tog-sub">Promotional price — Health 30% profit / Food 25% profit</div>
+            </div>
+            <label class="ts"><input type="checkbox" id="tog-offer" onchange="saveSettings()"><span
+                class="tsl"></span></label>
+          </div>
+          <div class="tog-row">
+            <div>
+              <div class="tog-lbl">Minimum price <span class="pill pill-m">Floor</span></div>
+              <div class="tog-sub">Never go below this — Health 20% profit / Food 15% profit</div>
+            </div>
+            <label class="ts"><input type="checkbox" id="tog-min" onchange="saveSettings()"><span
+                class="tsl"></span></label>
+          </div>
+        </div>
+
+        <div class="sc">
+          <div class="sc-title">Product card display options</div>
+          <div class="tog-row">
+            <div>
+              <div class="tog-lbl">Show AUD price on cards</div>
+              <div class="tog-sub">Show original Australian price (A$ xx.xx)</div>
+            </div>
+            <label class="ts"><input type="checkbox" id="tog-aud" checked onchange="saveSettings()"><span
+                class="tsl"></span></label>
+          </div>
+          <div class="tog-row">
+            <div>
+              <div class="tog-lbl">Show product code on cards</div>
+              <div class="tog-sub">Show code (e.g. B001) on each card</div>
+            </div>
+            <label class="ts"><input type="checkbox" id="tog-code" checked onchange="saveSettings()"><span
+                class="tsl"></span></label>
+          </div>
+          <div class="tog-row">
+            <div>
+              <div class="tog-lbl">Show description on cards</div>
+              <div class="tog-sub">Show short description text under product name</div>
+            </div>
+            <label class="ts"><input type="checkbox" id="tog-desc" checked onchange="saveSettings()"><span
+                class="tsl"></span></label>
+          </div>
+        </div>
+
+        <div class="sc">
+          <div class="sc-title">Global pricing defaults</div>
+          <div class="frow" style="margin-bottom:.5rem">
+            <div class="sf">
+              <label>AUD → LKR exchange rate</label>
+              <input type="number" id="s-rate" value="210" step="1" oninput="saveSettings()">
+              <span class="hint">Used in calculator on catalog page</span>
+            </div>
+            <div class="sf">
+              <label>Default packaging cost (LKR)</label>
+              <input type="number" id="s-pack" value="50" step="10" oninput="saveSettings()">
+              <span class="hint">Pre-filled when adding new products</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="sc">
+          <div class="sc-title">Catalog page text</div>
+          <div class="sf">
+            <label>Business name / site title</label>
+            <input type="text" id="s-title" value="AUSI.LK" oninput="saveSettings()">
+          </div>
+          <div class="sf" style="margin-bottom:0">
+            <label>Tagline (shown in green hero banner)</label>
+            <input type="text" id="s-tagline" value="Imported from Australia · All prices in LKR"
+              oninput="saveSettings()">
+          </div>
+        </div>
+
+        <div class="save-msg" id="save-msg"></div>
+      </div>
+    </div>
+
+  </div><!-- end .admin -->
+
+  <!-- ADD / EDIT DRAWER -->
+  <div class="doverlay" id="doverlay" onclick="doBgClose(event)">
+    <div class="drawer">
+      <div>
+        <div class="dtitle" id="dtitle">Add product</div>
+        <div class="dsub" id="dsub">Fill in all required fields</div>
+      </div>
+
+      <div class="df">
+        <label>Category *</label>
+        <select id="f-cat" onchange="autoCalc(); updateCodePreview()">
+          <option value="pharma">Personal &amp; Health Care</option>
+          <option value="super">Grocery &amp; Food</option>
+        </select>
+      </div>
+      <div class="frow">
+        <div class="df">
+          <label>Product code <span class="auto-code-badge">⚡ Auto-generated</span></label>
+          <div class="code-preview" id="f-code-preview">—</div>
+          <input type="hidden" id="f-code">
+        </div>
+        <div class="df"><label>Brand</label><input type="text" id="f-brand" placeholder="e.g. Swisse"></div>
+      </div>
+      <div class="df"><label>Product name *</label><input type="text" id="f-name" placeholder="Full product name" oninput="updateCodePreview()"></div>
+      <div class="df"><label>Description</label><textarea id="f-desc"
+          placeholder="Short description (optional)"></textarea></div>
+
+      <div class="sec-div"></div>
+      <div class="sec-lbl">Stock information</div>
+
+      <div class="stock-row">
+        <div class="df">
+          <label>In Stock?</label>
+          <select id="f-instock" onchange="toggleStockQty()">
+            <option value="true">✅ Yes — In Stock</option>
+            <option value="false">❌ No — Out of Stock</option>
+          </select>
+        </div>
+        <div class="df" id="qty-wrap">
+          <label>Quantity</label>
+          <div class="qty-input">
+            <button type="button" class="qty-btn" onclick="adjQty(-1)">−</button>
+            <input type="number" class="qty-val" id="f-qty" value="1" min="0" step="1">
+            <button type="button" class="qty-btn" onclick="adjQty(1)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="sec-div"></div>
+      <div class="sec-lbl">Pricing inputs</div>
+
+      <div class="df">
+        <label>AUD price (Chemist Warehouse price) *</label>
+        <input type="number" id="f-aud" placeholder="e.g. 16.69" step="0.01" min="0" oninput="autoCalc()">
+      </div>
+      <div class="frow">
+        <div class="df">
+          <label>AUD → LKR rate</label>
+          <input type="number" id="f-rate" value="210" step="1" oninput="autoCalc()">
+        </div>
+        <div class="df">
+          <label>Shipping cost (LKR)</label>
+          <input type="number" id="f-ship" placeholder="e.g. 400" step="50" min="0" oninput="autoCalc()">
+        </div>
+      </div>
+      <div class="frow">
+        <div class="df">
+          <label>Tax / Customs (LKR)</label>
+          <input type="number" id="f-tax" placeholder="auto-calculated" step="50" min="0" oninput="autoCalc()">
+          <span class="hint">Leave blank to auto-calculate</span>
+        </div>
+        <div class="df">
+          <label>Packaging (LKR)</label>
+          <input type="number" id="f-pack" value="50" step="10" min="0" oninput="autoCalc()">
+        </div>
+      </div>
+
+      <!-- Calculation breakdown preview -->
+      <div class="calc-prev" id="calc-prev"></div>
+
+      <div class="sec-div"></div>
+      <div class="sec-lbl">Calculated prices — editable</div>
+
+      <div class="price-outs">
+        <div class="pout pn">
+          <div class="pout-lbl">Normal price</div>
+          <input type="number" id="f-maxprice" placeholder="—" step="50" min="0">
+        </div>
+        <div class="pout po">
+          <div class="pout-lbl">Offer price</div>
+          <input type="number" id="f-offerprice" placeholder="—" step="50" min="0">
+        </div>
+        <div class="pout pm">
+          <div class="pout-lbl">Min price</div>
+          <input type="number" id="f-minprice" placeholder="—" step="50" min="0">
+        </div>
+      </div>
+
+      <div class="dbtns">
+        <button class="dbtn dbtn-cancel" onclick="closeDrawer()">Cancel</button>
+        <button class="dbtn dbtn-save" id="savebtn" onclick="saveProduct()">Save product</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONFIRM DELETE -->
+  <div class="cov" id="cov">
+    <div class="cbox">
+      <h3>Delete product?</h3>
+      <p id="cmsg">This cannot be undone.</p>
+      <div class="cbtns">
+        <button class="dbtn dbtn-cancel" style="flex:1"
+          onclick="document.getElementById('cov').classList.remove('on')">Cancel</button>
+        <button class="dbtn dbtn-save" id="cdelbtn"
+          style="flex:1;background:var(--red);border-color:var(--red)">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // ══ CONFIGURATION — fill these in ════════════════════════════════
+    const ADMIN_PASSWORD = "ausi2024admin"; // ← change this
+    const BIN_ID = "69da39eb36566621a8a074ef";
+    const API_KEY = "$2a$10$Zwk749p81U9/6X7RWVuDd.b8gvoutWCCSDc2lGA.WPXx7SU1o8/lO";
+    // ═════════════════════════════════════════════════════════════════
+
+    const BASE = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
+
+    const DEFAULT_SETTINGS = {
+      showNormal: true, showOffer: false, showMin: false,
+      showAud: true, showCode: true, showDesc: true,
+      rate: 210, pack: 50,
+      title: 'AUSI.LK',
+      tagline: 'Imported from Australia · All prices in LKR'
+    };
+
+    let _db = { pharma: [], super: [], settings: {} };
+    let _filt = 'all';
+    let _editIdx = null;
+
+    // ── AUTH ──────────────────────────────────────────────────────────
+    function doLogin() {
+      if (document.getElementById('lpw').value === ADMIN_PASSWORD) {
+        sessionStorage.setItem('ausi_ok', '1');
+        document.getElementById('login-wrap').style.display = 'none';
+        document.getElementById('admin').classList.add('on');
+        loadData();
+      } else {
+        document.getElementById('lerr').style.display = 'block';
+        document.getElementById('lpw').value = '';
+      }
+    }
+    function doLogout() { sessionStorage.removeItem('ausi_ok'); location.reload(); }
+    if (sessionStorage.getItem('ausi_ok') === '1') {
+      document.getElementById('login-wrap').style.display = 'none';
+      document.getElementById('admin').classList.add('on');
+      loadData();
+    }
+
+    // ── PAGE SWITCHING ────────────────────────────────────────────────
+    function showPage(page, btn) {
+      document.getElementById('page-products').style.display = page === 'products' ? '' : 'none';
+      document.getElementById('page-settings').style.display = page === 'settings' ? '' : 'none';
+      document.querySelectorAll('.ptab').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      if (page === 'settings') loadSettingsUI();
+    }
+
+    // ── DATA ──────────────────────────────────────────────────────────
+    async function loadData() {
+      try {
+        const r = await fetch(BASE + '/latest', { headers: { 'X-Access-Key': API_KEY } });
+        const j = await r.json();
+        _db = j.record || {};
+        if (!_db.pharma) _db.pharma = [];
+        if (!_db.super) _db.super = [];
+        if (!_db.settings) _db.settings = {};
+        _db.settings = { ...DEFAULT_SETTINGS, ..._db.settings };
+        updateStats();
+        renderTable();
+        document.getElementById('f-rate').value = _db.settings.rate || 210;
+        document.getElementById('f-pack').value = _db.settings.pack || 50;
+      } catch (e) {
+        toast('Failed to load — check BIN_ID and API_KEY', 'err');
+      }
+    }
+
+    async function saveData() {
+      const r = await fetch(BASE, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'X-Access-Key': API_KEY },
+        body: JSON.stringify(_db)
+      });
+      if (!r.ok) throw new Error('Save failed ' + r.status);
+    }
+
+    // ── STATS ─────────────────────────────────────────────────────────
+    function updateStats() {
+      document.getElementById('sn-t').textContent = (_db.pharma || []).length + (_db.super || []).length;
+      document.getElementById('sn-p').textContent = (_db.pharma || []).length;
+      document.getElementById('sn-s').textContent = (_db.super || []).length;
+    }
+
+    // ── SETTINGS ──────────────────────────────────────────────────────
+    function loadSettingsUI() {
+      const s = _db.settings;
+      document.getElementById('tog-normal').checked = s.showNormal !== false;
+      document.getElementById('tog-offer').checked = s.showOffer === true;
+      document.getElementById('tog-min').checked = s.showMin === true;
+      document.getElementById('tog-aud').checked = s.showAud !== false;
+      document.getElementById('tog-code').checked = s.showCode !== false;
+      document.getElementById('tog-desc').checked = s.showDesc !== false;
+      document.getElementById('s-rate').value = s.rate || 210;
+      document.getElementById('s-pack').value = s.pack || 50;
+      document.getElementById('s-title').value = s.title || 'AUSI.LK';
+      document.getElementById('s-tagline').value = s.tagline || '';
+    }
+
+    let _stimer = null;
+    function saveSettings() {
+      _db.settings = {
+        showNormal: document.getElementById('tog-normal').checked,
+        showOffer: document.getElementById('tog-offer').checked,
+        showMin: document.getElementById('tog-min').checked,
+        showAud: document.getElementById('tog-aud').checked,
+        showCode: document.getElementById('tog-code').checked,
+        showDesc: document.getElementById('tog-desc').checked,
+        rate: parseFloat(document.getElementById('s-rate').value) || 210,
+        pack: parseFloat(document.getElementById('s-pack').value) || 50,
+        title: document.getElementById('s-title').value.trim() || 'AUSI.LK',
+        tagline: document.getElementById('s-tagline').value.trim() || '',
+      };
+      clearTimeout(_stimer);
+      document.getElementById('save-msg').textContent = 'Saving…';
+      _stimer = setTimeout(async () => {
+        try {
+          await saveData();
+          document.getElementById('save-msg').textContent = '✓ Saved — catalog will update instantly';
+          setTimeout(() => document.getElementById('save-msg').textContent = '', 3000);
+        } catch (e) {
+          document.getElementById('save-msg').textContent = 'Error: ' + e.message;
+        }
+      }, 800);
+    }
+
+    // ── TABLE ─────────────────────────────────────────────────────────
+    function setFilt(f, btn) {
+      _filt = f;
+      document.querySelectorAll('.ftab').forEach(b => b.classList.remove('on'));
+      btn.classList.add('on');
+      renderTable();
+    }
+
+    function renderTable() {
+      const q = document.getElementById('asq').value.toLowerCase();
+      let rows = [];
+      ['pharma', 'super'].forEach(cat => {
+        if (_filt !== 'all' && _filt !== cat) return;
+        (_db[cat] || []).forEach((p, idx) => {
+          if (q && !(p.name || '').toLowerCase().includes(q) &&
+            !(p.code || '').toLowerCase().includes(q) &&
+            !(p.brand || '').toLowerCase().includes(q)) return;
+          rows.push({ ...p, cat, idx });
+        });
+      });
+      document.getElementById('acbar').textContent = rows.length + ' product' + (rows.length !== 1 ? 's' : '');
+      const tbody = document.getElementById('atbody');
+      if (!rows.length) { tbody.innerHTML = '<tr><td colspan="7" class="etbl">No products found</td></tr>'; return; }
+      tbody.innerHTML = rows.map(p => {
+        const inStock = p.inStock !== false;
+        const qty = parseInt(p.quantity) || 0;
+        let stockClass, stockLabel;
+        if (!inStock || qty === 0) { stockClass = 'stock-out'; stockLabel = 'Out'; }
+        else if (qty <= 3) { stockClass = 'stock-low'; stockLabel = qty + ' left'; }
+        else { stockClass = 'stock-in'; stockLabel = qty + ' in stock'; }
+        return `
+    <tr>
+      <td><div class="tc">${p.code || '—'}</div></td>
+      <td>
+        <div class="tn">${p.name}</div>
+        ${p.brand ? `<div class="tbr">${p.brand}</div>` : ''}
+      </td>
+      <td><span class="badge badge-${p.cat}">${p.cat === 'pharma' ? 'Health' : 'Food'}</span></td>
+      <td><span class="stock-badge ${stockClass}"><span class="stock-dot"></span>${stockLabel}</span></td>
+      <td><div class="ta">A$ ${parseFloat(p.aud || 0).toFixed(2)}</div></td>
+      <td>
+        <div class="tp">Rs. ${Math.round(p.maxPrice || 0).toLocaleString()}</div>
+        <div style="font-size:11px;color:var(--text3)">
+          Offer: Rs. ${Math.round(p.offerPrice || 0).toLocaleString()} &nbsp;·&nbsp;
+          Min: Rs. ${Math.round(p.minPrice || 0).toLocaleString()}
+        </div>
+      </td>
+      <td>
+        <div class="ra">
+          <button class="ebtn ebtn-e" onclick="openDrawer('${p.cat}',${p.idx})">Edit</button>
+          <button class="ebtn ebtn-d" onclick="confirmDel('${p.cat}',${p.idx},'${(p.name || '').replace(/'/g, "\\'")}')">Delete</button>
+        </div>
+      </td>
+    </tr>`;
+      }).join('');
+    }
+
+    // ── DRAWER ────────────────────────────────────────────────────────
+    // ── AUTO ITEM CODE GENERATION ──────────────────────────────────
+    // Formula from Excel: =LEFT(B,1) & TEXT(COUNTIF($B$6:B, LEFT(B,1) & "*"), "000")
+    // Takes first letter of product name + sequential count padded to 3 digits
+    function generateItemCode(productName, category, editIdx) {
+      if (!productName || !productName.trim()) return '—';
+      const firstLetter = productName.trim().charAt(0).toUpperCase();
+      // Count all existing products starting with the same letter across both categories
+      let count = 0;
+      ['pharma', 'super'].forEach(cat => {
+        (_db[cat] || []).forEach((p, i) => {
+          // Skip the product being edited
+          if (editIdx && editIdx.cat === cat && editIdx.idx === i) return;
+          if (p.name && p.name.trim().charAt(0).toUpperCase() === firstLetter) {
+            count++;
+          }
+        });
+      });
+      count++; // This new product is the next one
+      return firstLetter + String(count).padStart(3, '0');
+    }
+
+    function updateCodePreview() {
+      const name = document.getElementById('f-name').value;
+      const code = generateItemCode(name, document.getElementById('f-cat').value, _editIdx);
+      document.getElementById('f-code-preview').textContent = code;
+      document.getElementById('f-code').value = code === '—' ? '' : code;
+    }
+
+    // ── STOCK HELPERS ─────────────────────────────────────────────────
+    function toggleStockQty() {
+      const inStock = document.getElementById('f-instock').value === 'true';
+      document.getElementById('qty-wrap').style.display = inStock ? '' : 'none';
+      if (!inStock) document.getElementById('f-qty').value = 0;
+    }
+
+    function adjQty(delta) {
+      const el = document.getElementById('f-qty');
+      let val = parseInt(el.value) || 0;
+      val = Math.max(0, val + delta);
+      el.value = val;
+    }
+
+    function openDrawer(cat, idx) {
+      _editIdx = (cat !== undefined && idx !== undefined) ? { cat, idx } : null;
+      const isEdit = !!_editIdx;
+      document.getElementById('dtitle').textContent = isEdit ? 'Edit product' : 'Add product';
+      document.getElementById('dsub').textContent = isEdit ? 'Update the details below' : 'Fill in all required fields — item code auto-generates';
+      document.getElementById('calc-prev').style.display = 'none';
+
+      ['f-code', 'f-brand', 'f-name', 'f-desc', 'f-aud', 'f-ship', 'f-tax',
+        'f-maxprice', 'f-offerprice', 'f-minprice'].forEach(id => {
+          document.getElementById(id).value = '';
+        });
+      document.getElementById('f-cat').value = 'pharma';
+      document.getElementById('f-rate').value = _db.settings.rate || 210;
+      document.getElementById('f-pack').value = _db.settings.pack || 50;
+      document.getElementById('f-instock').value = 'true';
+      document.getElementById('f-qty').value = 1;
+      document.getElementById('qty-wrap').style.display = '';
+      document.getElementById('f-code-preview').textContent = '—';
+
+      if (isEdit) {
+        const p = (_db[cat] || [])[idx];
+        if (p) {
+          document.getElementById('f-cat').value = cat;
+          document.getElementById('f-code').value = p.code || '';
+          document.getElementById('f-code-preview').textContent = p.code || '—';
+          document.getElementById('f-brand').value = p.brand || '';
+          document.getElementById('f-name').value = p.name || '';
+          document.getElementById('f-desc').value = p.desc || '';
+          document.getElementById('f-aud').value = p.aud || '';
+          document.getElementById('f-ship').value = p.shipping || '';
+          document.getElementById('f-maxprice').value = p.maxPrice || '';
+          document.getElementById('f-offerprice').value = p.offerPrice || '';
+          document.getElementById('f-minprice').value = p.minPrice || '';
+          document.getElementById('f-instock').value = p.inStock !== false ? 'true' : 'false';
+          document.getElementById('f-qty').value = p.quantity || 0;
+          toggleStockQty();
+          if (p.aud) autoCalc();
+        }
+      }
+      document.getElementById('doverlay').classList.add('on');
+      document.querySelector('.drawer').scrollTop = 0;
+    }
+
+    function closeDrawer() { document.getElementById('doverlay').classList.remove('on'); }
+    function doBgClose(e) { if (e.target === document.getElementById('doverlay')) closeDrawer(); }
+
+    // ── AUTO PRICE CALCULATION ────────────────────────────────────────
+    // Exact formula from AUSI_LK_Product_Master_Database.xlsx
+    // F  = AUD × rate
+    // H  = CEILING(F × taxRate, 50)   [auto if blank]
+    // J  = F + Shipping + H + Packaging   [total base]
+    // K% = buffer %   (Health 10% / Food 5%)
+    // L  = J × K%     [buffer amount]
+    // Normal = smartCeil(J + L + J × profitNormal)
+    // Offer  = smartCeil(J + L + J × profitOffer)
+    // Min    = smartCeil(J + L + J × profitMin)
+    // smartCeil: CEILING(x,50) but if result is round hundred → subtract 10
+
+    function ceil50(n) { return Math.ceil(n / 50) * 50; }
+    function smartCeil(n) { const c = ceil50(n); return (c % 100 === 0) ? c - 10 : c; }
+
+    function autoCalc() {
+      const aud = parseFloat(document.getElementById('f-aud').value) || 0;
+      const rate = parseFloat(document.getElementById('f-rate').value) || 210;
+      const ship = parseFloat(document.getElementById('f-ship').value) || 0;
+      const pack = parseFloat(document.getElementById('f-pack').value) || 50;
+      const cat = document.getElementById('f-cat').value;
+      const prev = document.getElementById('calc-prev');
+
+      if (!aud) { prev.style.display = 'none'; return; }
+
+      const isHealth = cat === 'pharma';
+      const taxRate = isHealth ? 0.05 : 0.02;
+      const bufferPct = isHealth ? 0.10 : 0.05;
+      const pNormal = isHealth ? 0.50 : 0.40;
+      const pOffer = isHealth ? 0.30 : 0.25;
+      const pMin = isHealth ? 0.20 : 0.15;
+
+      const taxRaw = document.getElementById('f-tax').value;
+      const costLKR = aud * rate;
+      const tax = taxRaw !== '' ? parseFloat(taxRaw) || 0 : ceil50(costLKR * taxRate);
+      const totalBase = costLKR + ship + tax + pack;
+      const bufferAmt = totalBase * bufferPct;
+
+      const normalPrice = smartCeil(totalBase + bufferAmt + totalBase * pNormal);
+      const offerPrice = smartCeil(totalBase + bufferAmt + totalBase * pOffer);
+      const minPrice = smartCeil(totalBase + bufferAmt + totalBase * pMin);
+
+      document.getElementById('f-maxprice').value = normalPrice;
+      document.getElementById('f-offerprice').value = offerPrice;
+      document.getElementById('f-minprice').value = minPrice;
+
+      prev.style.display = 'flex';
+      prev.innerHTML = `
+    <div><strong>Category:</strong> ${isHealth ? 'Personal &amp; Health Care' : 'Grocery &amp; Food'}</div>
+    <div>
+      <strong>Base cost:</strong>
+      LKR ${Math.round(costLKR).toLocaleString()}
+      + Ship ${ship.toLocaleString()}
+      + Tax ${taxRaw !== '' ? '(manual)' : `(${taxRate * 100}% auto)`} ${Math.round(tax).toLocaleString()}
+      + Pack ${pack}
+      = <strong>Rs. ${Math.round(totalBase).toLocaleString()}</strong>
+    </div>
+    <div><strong>Buffer (${bufferPct * 100}%):</strong> Rs. ${Math.round(bufferAmt).toLocaleString()}</div>
+    <div>
+      <strong>Normal (${pNormal * 100}%&nbsp;profit):</strong> Rs. ${normalPrice.toLocaleString()} &nbsp;|&nbsp;
+      <strong>Offer (${pOffer * 100}%):</strong> Rs. ${offerPrice.toLocaleString()} &nbsp;|&nbsp;
+      <strong>Min (${pMin * 100}%):</strong> Rs. ${minPrice.toLocaleString()}
+    </div>`;
+    }
+
+    // ── SAVE PRODUCT ──────────────────────────────────────────────────
+    async function saveProduct() {
+      const name = document.getElementById('f-name').value.trim();
+      const aud = parseFloat(document.getElementById('f-aud').value);
+      const maxPrice = parseFloat(document.getElementById('f-maxprice').value);
+
+      if (!name) { toast('Product name is required', 'err'); return; }
+      if (!aud) { toast('AUD price is required', 'err'); return; }
+      if (!maxPrice) { toast('Enter AUD price first — prices will auto-calculate', 'err'); return; }
+
+      const btn = document.getElementById('savebtn');
+      btn.innerHTML = '<span class="spin"></span>Saving…';
+      btn.disabled = true;
+
+      const cat = document.getElementById('f-cat').value;
+      // Auto-generate code if adding new, or regenerate on edit
+      const autoCode = generateItemCode(name, cat, _editIdx);
+      const product = {
+        code: autoCode !== '—' ? autoCode : (document.getElementById('f-code').value.trim() || ''),
+        brand: document.getElementById('f-brand').value.trim(),
+        name,
+        desc: document.getElementById('f-desc').value.trim(),
+        aud,
+        shipping: parseFloat(document.getElementById('f-ship').value) || 0,
+        maxPrice,
+        offerPrice: parseFloat(document.getElementById('f-offerprice').value) || 0,
+        minPrice: parseFloat(document.getElementById('f-minprice').value) || 0,
+        inStock: document.getElementById('f-instock').value === 'true',
+        quantity: parseInt(document.getElementById('f-qty').value) || 0,
+      };
+
+      try {
+        if (_editIdx) {
+          if (_editIdx.cat !== cat) {
+            _db[_editIdx.cat].splice(_editIdx.idx, 1);
+            _db[cat].unshift(product);
+          } else {
+            _db[cat][_editIdx.idx] = product;
+          }
+        } else {
+          _db[cat].unshift(product);
+        }
+        await saveData();
+        closeDrawer();
+        updateStats();
+        renderTable();
+        toast(_editIdx ? 'Product updated!' : 'Product added!', 'ok');
+      } catch (e) {
+        toast('Error: ' + e.message, 'err');
+      } finally {
+        btn.innerHTML = 'Save product';
+        btn.disabled = false;
+      }
+    }
+
+    // ── DELETE ────────────────────────────────────────────────────────
+    function confirmDel(cat, idx, name) {
+      document.getElementById('cmsg').textContent = `"${name}" will be permanently deleted.`;
+      document.getElementById('cdelbtn').onclick = async () => {
+        document.getElementById('cov').classList.remove('on');
+        _db[cat].splice(idx, 1);
+        try {
+          await saveData();
+          updateStats();
+          renderTable();
+          toast('Product deleted', 'ok');
+        } catch (e) { toast('Delete failed', 'err'); }
+      };
+      document.getElementById('cov').classList.add('on');
+    }
+
+    // ── TOAST ─────────────────────────────────────────────────────────
+    function toast(msg, type = '') {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.className = 'toast on' + (type ? ' ' + type : '');
+      setTimeout(() => t.classList.remove('on'), 3200);
+    }
+  </script>
+</body>
+
+</html>

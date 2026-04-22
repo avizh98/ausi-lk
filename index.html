@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AUSI.LK — Product Catalog</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Syne:wght@400;600;700&family=Instrument+Sans:wght@400;500&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f5f3ef;
+      --surface: #ffffff;
+      --surface2: #eeebe5;
+      --border: #ddd9d1;
+      --text: #1c1a17;
+      --text2: #6b6660;
+      --text3: #a09c97;
+      --green: #1a5c3a;
+      --green-light: #edf5f0;
+      --green-mid: #2d7a52;
+      --red: #b83224;
+      --gold: #a07820;
+      --gold-light: #fdf8ed;
+      --r: 10px;
+      --rsm: 6px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Instrument Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .header {
+      background: var(--text);
+      color: #fff;
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 62px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo {
+      font-family: 'Syne', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    .logo em {
+      color: #6ee7a8;
+      font-style: normal;
+    }
+
+    .header-right {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.4);
+    }
+
+    .hero {
+      background: var(--green);
+      padding: 1.75rem 2rem;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .hero-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 26px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.1;
+    }
+
+    .hero-title span {
+      color: #6ee7a8;
+    }
+
+    .hero-sub {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.6);
+      margin-top: 5px;
+    }
+
+    .stats {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .stat-n {
+      font-family: 'Inter', sans-serif;
+      font-size: 22px;
+      font-weight: 800;
+      color: #6ee7a8;
+      letter-spacing: -0.5px;
+    }
+
+    .stat-l {
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.45);
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .tab-bar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      display: flex;
+      gap: 0;
+    }
+
+    .tab-btn {
+      font-family: 'Syne', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 14px 18px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      color: var(--text3);
+      border-bottom: 3px solid transparent;
+      transition: all .15s;
+      letter-spacing: .3px;
+    }
+
+    .tab-btn.active {
+      color: var(--green);
+      border-bottom-color: var(--green);
+    }
+
+    .tab-btn:hover:not(.active) {
+      color: var(--text2);
+    }
+
+    .controls {
+      display: flex;
+      gap: 10px;
+      padding: .9rem 2rem;
+      align-items: center;
+      flex-wrap: wrap;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .search-box {
+      flex: 1;
+      min-width: 200px;
+      position: relative;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 9px 14px 9px 36px;
+      border: 1px solid var(--border);
+      border-radius: var(--rsm);
+      font-size: 13px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Instrument Sans', sans-serif;
+      outline: none;
+      transition: border-color .15s;
+    }
+
+    .search-box input:focus {
+      border-color: var(--green);
+    }
+
+    .si {
+      position: absolute;
+      left: 11px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text3);
+    }
+
+    .fsel {
+      padding: 9px 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--rsm);
+      font-size: 13px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Instrument Sans', sans-serif;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .result-bar {
+      padding: .5rem 2rem;
+      font-size: 12px;
+      color: var(--text3);
+    }
+
+    .catalog {
+      padding: 1rem 2rem 3rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 12px;
+    }
+
+    .grid.list {
+      grid-template-columns: 1fr;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      transition: box-shadow .2s, transform .2s;
+      cursor: pointer;
+    }
+
+    .card:hover {
+      box-shadow: 0 4px 18px rgba(0, 0, 0, .08);
+      transform: translateY(-2px);
+    }
+
+    .grid.list .card {
+      flex-direction: row;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .grid.list .card-body {
+      flex: 1;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .grid.list .card-footer {
+      margin-top: 0;
+      padding-top: 0;
+      border-top: none;
+      flex-shrink: 0;
+    }
+
+    .card-code {
+      font-family: 'Syne', sans-serif;
+      font-size: 10px;
+      color: var(--text3);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .card-name {
+      font-size: 13px;
+      font-weight: 500;
+      line-height: 1.4;
+      color: var(--text);
+      flex: 1;
+    }
+
+    .card-brand {
+      font-size: 11px;
+      color: var(--text3);
+    }
+
+    .card-desc {
+      font-size: 11.5px;
+      color: var(--text2);
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-top: 4px;
+      padding-top: 8px;
+      border-top: 1px solid var(--border);
+    }
+
+    .card-aud {
+      font-size: 11px;
+      color: var(--text3);
+    }
+
+    .card-lkr {
+      font-family: 'Inter', sans-serif;
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--green);
+      letter-spacing: -0.3px;
+    }
+
+    /* STOCK BADGES */
+    .stock-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .3px;
+      text-transform: uppercase;
+    }
+
+    .stock-chip.in {
+      background: var(--green-light);
+      color: var(--green);
+    }
+
+    .stock-chip.low {
+      background: var(--gold-light);
+      color: var(--gold);
+    }
+
+    .stock-chip.out {
+      background: #fdf1ef;
+      color: var(--red);
+    }
+
+    .stock-chip .sdot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .stock-chip.in .sdot { background: var(--green); }
+    .stock-chip.low .sdot { background: var(--gold); }
+    .stock-chip.out .sdot { background: var(--red); }
+
+    .card.out-of-stock {
+      opacity: .6;
+      position: relative;
+    }
+
+    .card.out-of-stock::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(245,243,239,.3);
+      border-radius: var(--r);
+      pointer-events: none;
+    }
+
+    .view-toggle {
+      display: flex;
+      border: 1px solid var(--border);
+      border-radius: var(--rsm);
+      overflow: hidden;
+    }
+
+    .vbtn {
+      padding: 8px 11px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      color: var(--text3);
+      font-size: 13px;
+      transition: all .15s;
+    }
+
+    .vbtn.active {
+      background: var(--text);
+      color: #fff;
+    }
+
+    /* MODAL */
+    .modal-bg {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .5);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .modal-bg.open {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--surface);
+      border-radius: 14px;
+      max-width: 480px;
+      width: 100%;
+      padding: 1.75rem;
+      position: relative;
+    }
+
+    .modal-close-btn {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: var(--bg);
+      border: none;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      cursor: pointer;
+      font-size: 14px;
+      color: var(--text2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .m-code {
+      font-size: 11px;
+      color: var(--text3);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 5px;
+    }
+
+    .m-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 4px;
+    }
+
+    .m-brand {
+      font-size: 13px;
+      color: var(--text2);
+      margin-bottom: 1rem;
+    }
+
+    .m-desc {
+      font-size: 14px;
+      color: var(--text2);
+      line-height: 1.6;
+      padding: 1rem 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 1rem;
+    }
+
+    .m-prices {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 1.25rem;
+    }
+
+    .price-box {
+      background: var(--bg);
+      border-radius: var(--rsm);
+      padding: .75rem;
+    }
+
+    .price-box-lbl {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      color: var(--text3);
+      margin-bottom: 3px;
+    }
+
+    .price-box-val {
+      font-family: 'Inter', sans-serif;
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+    }
+
+    .price-box-val.lkr {
+      color: var(--green);
+    }
+
+    .price-box-val.aud {
+      color: var(--gold);
+    }
+
+    .m-close {
+      width: 100%;
+      padding: 11px;
+      border: 1px solid var(--border);
+      border-radius: var(--rsm);
+      background: none;
+      cursor: pointer;
+      font-family: 'Instrument Sans', sans-serif;
+      font-size: 14px;
+      color: var(--text2);
+      transition: background .15s;
+    }
+
+    .m-close:hover {
+      background: var(--bg);
+    }
+
+    /* CALCULATOR */
+    .calc-wrap {
+      padding: 2rem;
+      max-width: 660px;
+      margin: 0 auto;
+    }
+
+    .calc-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    @media(max-width:580px) {
+      .calc-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .calc-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 1.5rem;
+    }
+
+    .csect {
+      font-family: 'Syne', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text3);
+      margin-bottom: 1rem;
+      padding-bottom: .6rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .ff {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-bottom: .9rem;
+    }
+
+    .ff label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text2);
+    }
+
+    .ff input,
+    .ff select {
+      padding: 9px 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--rsm);
+      font-size: 13px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Instrument Sans', sans-serif;
+      outline: none;
+      width: 100%;
+      transition: border-color .15s;
+    }
+
+    .ff input:focus,
+    .ff select:focus {
+      border-color: var(--green);
+    }
+
+    .ff .hint {
+      font-size: 11px;
+      color: var(--text3);
+    }
+
+    .res-box {
+      background: var(--green-light);
+      border: 1px solid #9fcfb3;
+      border-radius: var(--r);
+      padding: 1.25rem;
+    }
+
+    .res-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 5px 0;
+    }
+
+    .res-row+.res-row {
+      border-top: 1px solid rgba(0, 0, 0, .06);
+    }
+
+    .res-lbl {
+      font-size: 13px;
+      color: var(--green);
+    }
+
+    .res-val {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--green);
+      letter-spacing: -0.2px;
+    }
+
+    .res-big {
+      font-size: 26px !important;
+    }
+
+    .cwarn {
+      background: var(--gold-light);
+      border: 1px solid #d4b06a;
+      border-radius: var(--rsm);
+      padding: .7rem 1rem;
+      font-size: 12px;
+      color: var(--gold);
+      margin-top: .75rem;
+      line-height: 1.5;
+      display: none;
+    }
+
+    .fml {
+      background: var(--bg);
+      border-radius: var(--rsm);
+      padding: .7rem 1rem;
+      font-size: 12px;
+      color: var(--text3);
+      line-height: 1.6;
+      margin-top: .75rem;
+    }
+
+    /* EMPTY / LOADING */
+    .empty {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--text3);
+    }
+
+    .empty h3 {
+      font-family: 'Syne', sans-serif;
+      color: var(--text2);
+      margin-bottom: .5rem;
+    }
+
+    .spinner {
+      width: 28px;
+      height: 28px;
+      border: 3px solid var(--border);
+      border-top-color: var(--green);
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+      margin: 0 auto 1rem;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @media(max-width:600px) {
+
+      .header,
+      .hero,
+      .tab-bar,
+      .controls,
+      .result-bar,
+      .catalog {
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-title {
+        font-size: 21px;
+      }
+
+      .stats {
+        gap: 1rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="header">
+    <div class="logo">AUSI<em>.LK</em></div>
+    <div class="header-right" id="hdr-meta">Loading…</div>
+  </header>
+
+  <div class="hero">
+    <div>
+      <div class="hero-title">Product <span>Catalog</span></div>
+      <div class="hero-sub">Imported from Australia · All prices in LKR</div>
+    </div>
+    <div class="stats">
+      <div>
+        <div class="stat-n" id="st-p">—</div>
+        <div class="stat-l">Pharma</div>
+      </div>
+      <div>
+        <div class="stat-n" id="st-s">—</div>
+        <div class="stat-l">Supermarket</div>
+      </div>
+      <div>
+        <div class="stat-n" id="st-stock">—</div>
+        <div class="stat-l">In Stock</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('pharma',this)">Pharmaceutical</button>
+    <button class="tab-btn" onclick="switchTab('super',this)">Supermarket</button>
+    <button class="tab-btn" onclick="switchTab('calc',this)">Price Calculator</button>
+  </div>
+
+  <!-- PHARMA -->
+  <div id="pan-pharma">
+    <div class="controls">
+      <div class="search-box">
+        <svg class="si" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8" />
+          <path d="m21 21-4.35-4.35" />
+        </svg>
+        <input type="text" id="sq-pharma" placeholder="Search name or code…" oninput="renderGrid('pharma')">
+      </div>
+      <select class="fsel" id="ss-pharma" onchange="renderGrid('pharma')">
+        <option value="def">Default order</option>
+        <option value="asc">Price: Low → High</option>
+        <option value="desc">Price: High → Low</option>
+        <option value="az">Name A–Z</option>
+      </select>
+      <div class="view-toggle">
+        <button class="vbtn active" onclick="setView('pharma','grid',this)">⊞</button>
+        <button class="vbtn" onclick="setView('pharma','list',this)">≡</button>
+      </div>
+    </div>
+    <div class="result-bar" id="rc-pharma"></div>
+    <div class="catalog">
+      <div class="grid" id="gr-pharma">
+        <div class="empty">
+          <div class="spinner"></div>Loading…
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUPER -->
+  <div id="pan-super" style="display:none">
+    <div class="controls">
+      <div class="search-box">
+        <svg class="si" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8" />
+          <path d="m21 21-4.35-4.35" />
+        </svg>
+        <input type="text" id="sq-super" placeholder="Search name or code…" oninput="renderGrid('super')">
+      </div>
+      <select class="fsel" id="ss-super" onchange="renderGrid('super')">
+        <option value="def">Default order</option>
+        <option value="asc">Price: Low → High</option>
+        <option value="desc">Price: High → Low</option>
+        <option value="az">Name A–Z</option>
+      </select>
+      <div class="view-toggle">
+        <button class="vbtn active" onclick="setView('super','grid',this)">⊞</button>
+        <button class="vbtn" onclick="setView('super','list',this)">≡</button>
+      </div>
+    </div>
+    <div class="result-bar" id="rc-super"></div>
+    <div class="catalog">
+      <div class="grid" id="gr-super">
+        <div class="empty">
+          <div class="spinner"></div>Loading…
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CALCULATOR -->
+  <div id="pan-calc" style="display:none">
+    <div style="padding:1.5rem 2rem 3rem;max-width:820px;margin:0 auto">
+
+      <!-- Category toggle -->
+      <div style="display:flex;gap:10px;margin-bottom:1.25rem;align-items:center;flex-wrap:wrap">
+        <span style="font-size:13px;color:var(--text2);font-weight:500">Category:</span>
+        <div class="view-toggle">
+          <button class="vbtn active" id="cat-h-btn" onclick="setCat('health',this)">Personal &amp; Health Care</button>
+          <button class="vbtn" id="cat-f-btn" onclick="setCat('food',this)">Grocery &amp; Food</button>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem">
+
+        <!-- LEFT: Inputs -->
+        <div class="calc-card">
+          <div class="csect">Inputs</div>
+          <div class="ff">
+            <label>Pick an existing product</label>
+            <select id="cp-sel" onchange="cpPick()">
+              <option value="">— or enter manually —</option>
+            </select>
+          </div>
+          <div class="ff"><label>Product name</label><input type="text" id="cp-name"
+              placeholder="e.g. Swisse Vitamin D"></div>
+          <div class="ff"><label>AUD price</label><input type="number" id="cp-aud" placeholder="e.g. 12.00" step="0.01"
+              min="0" oninput="calc()"></div>
+          <div style="height:1px;background:var(--border);margin:.75rem 0"></div>
+          <div
+            style="font-size:11px;text-transform:uppercase;letter-spacing:.8px;color:var(--text3);margin-bottom:.75rem;font-weight:600">
+            Additional costs (LKR) — override if needed</div>
+          <div class="ff"><label>Shipping cost (LKR)</label><input type="number" id="cp-ship"
+              placeholder="auto from product" step="50" min="0" oninput="calc()"><span class="hint">Leave blank to use
+              per-product value</span></div>
+          <div class="ff"><label>Tax / Customs (LKR)</label><input type="number" id="cp-tax"
+              placeholder="auto-calculated" step="50" min="0" oninput="calc()"><span class="hint">Leave blank to
+              auto-calculate</span></div>
+          <div class="ff"><label>Store / Packaging (LKR)</label><input type="number" id="cp-pack" value="50" step="10"
+              min="0" oninput="calc()"></div>
+          <div style="height:1px;background:var(--border);margin:.75rem 0"></div>
+          <div
+            style="font-size:11px;text-transform:uppercase;letter-spacing:.8px;color:var(--text3);margin-bottom:.75rem;font-weight:600">
+            Exchange rate</div>
+          <div class="ff"><label>AUD → LKR rate</label><input type="number" id="cp-rate" value="210" step="1"
+              oninput="calc()"><span class="hint">Set in admin Settings</span></div>
+        </div>
+
+        <!-- RIGHT: Result -->
+        <div class="calc-card">
+          <div class="csect">Price breakdown</div>
+          <div class="res-box" id="res-box">
+            <div class="res-row"><span class="res-lbl" style="color:var(--text3)">Select category &amp; enter AUD
+                price</span></div>
+          </div>
+          <div class="cwarn" id="cwarn"></div>
+          <div class="fml" id="fml-note" style="margin-top:.75rem"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL -->
+  <div class="modal-bg" id="modal" onclick="bgClose(event)">
+    <div class="modal">
+      <button class="modal-close-btn" onclick="closeModal()">✕</button>
+      <div id="modal-body"></div>
+    </div>
+  </div>
+
+  <script>
+    // ── CONFIG: paste your JSONBin Bin ID and API key here ──
+    const BIN_ID = "69da39eb36566621a8a074ef";
+    const API_KEY = "$2a$10$Zwk749p81U9/6X7RWVuDd.b8gvoutWCCSDc2lGA.WPXx7SU1o8/lO";
+    // ────────────────────────────────────────────────────────
+
+    const API = `https://api.jsonbin.io/v3/b/${BIN_ID}/latest`;
+    let _data = { pharma: [], super: [] };
+    let _view = { pharma: 'grid', super: 'grid' };
+
+    async function loadData() {
+      try {
+        const r = await fetch(API, { headers: { 'X-Access-Key': API_KEY } });
+        if (!r.ok) throw new Error('fetch failed');
+        const j = await r.json();
+        _data = j.record || { pharma: [], super: [] };
+        afterLoad();
+      } catch (e) {
+        document.getElementById('gr-pharma').innerHTML = '<div class="empty"><h3>Could not load products</h3><p>Check BIN_ID and API_KEY in the HTML.</p></div>';
+      }
+    }
+
+    function afterLoad() {
+      const s = _data.settings || {};
+      const p = (_data.pharma || []).length, f = (_data.super || []).length;
+      const inStockCount = [...(_data.pharma || []), ...(_data.super || [])].filter(i => i.inStock !== false && (parseInt(i.quantity) || 0) > 0).length;
+      document.getElementById('st-p').textContent = p;
+      document.getElementById('st-s').textContent = f;
+      document.getElementById('st-stock').textContent = inStockCount;
+      document.getElementById('hdr-meta').textContent = (p + f) + ' products';
+
+      // Apply settings to page
+      if (s.title) document.querySelector('.logo').innerHTML = s.title.replace('.LK', '<em>.LK</em>');
+      if (s.tagline) document.querySelector('.hero-sub').textContent = s.tagline;
+
+      renderGrid('pharma');
+      renderGrid('super');
+      buildCalcDropdown();
+      // Apply rate from settings to calculator
+      if (s.rate) document.getElementById('cp-rate').value = s.rate;
+      if (s.pack) document.getElementById('cp-pack').value = s.pack;
+    }
+
+    function fmt(n) { return 'Rs. ' + Math.round(n).toLocaleString(); }
+
+    function switchTab(t, btn) {
+      ['pharma', 'super', 'calc'].forEach(x => document.getElementById('pan-' + x).style.display = x === t ? '' : 'none');
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+
+    function setView(type, mode, btn) {
+      _view[type] = mode;
+      const g = document.getElementById('gr-' + type);
+      mode === 'list' ? g.classList.add('list') : g.classList.remove('list');
+      btn.parentElement.querySelectorAll('.vbtn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+
+    function renderGrid(type) {
+      const q = document.getElementById('sq-' + type).value.toLowerCase();
+      const s = document.getElementById('ss-' + type).value;
+      let items = (_data[type] || []).slice();
+      if (q) items = items.filter(i => (i.name || '').toLowerCase().includes(q) || (i.code || '').toLowerCase().includes(q) || (i.brand || '').toLowerCase().includes(q));
+      if (s === 'asc') items.sort((a, b) => (a.maxPrice || 0) - (b.maxPrice || 0));
+      else if (s === 'desc') items.sort((a, b) => (b.maxPrice || 0) - (a.maxPrice || 0));
+      else if (s === 'az') items.sort((a, b) => a.name.localeCompare(b.name));
+      document.getElementById('rc-' + type).textContent = items.length + ' product' + (items.length !== 1 ? 's' : '') + (q ? ' for "' + q + '"' : '');
+      const g = document.getElementById('gr-' + type);
+      if (_view[type] === 'list') g.classList.add('list'); else g.classList.remove('list');
+      if (!items.length) { g.innerHTML = '<div class="empty"><h3>No products found</h3><p>Try a different search</p></div>'; return; }
+      g.innerHTML = items.map((p, i) => {
+        const inStock = p.inStock !== false;
+        const qty = parseInt(p.quantity) || 0;
+        const isOut = !inStock || qty === 0;
+        const isLow = inStock && qty > 0 && qty <= 3;
+        let chipClass = 'in', chipText = qty + ' in stock';
+        if (isOut) { chipClass = 'out'; chipText = 'Out of stock'; }
+        else if (isLow) { chipClass = 'low'; chipText = qty + ' left'; }
+        return `
+    <div class="card ${isOut ? 'out-of-stock' : ''}" onclick="openModal('${type}',${i})">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div class="card-code">${p.code || ''}</div>
+        <span class="stock-chip ${chipClass}"><span class="sdot"></span>${chipText}</span>
+      </div>
+      <div class="card-name">${p.name}</div>
+      ${p.brand ? `<div class="card-brand">${p.brand}</div>` : ''}
+      ${p.desc ? `<div class="card-desc">${p.desc}</div>` : ''}
+      <div class="card-footer">
+        <div class="card-aud">A$ ${parseFloat(p.aud || 0).toFixed(2)}</div>
+        <div>
+          <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.4px">Normal price</div>
+          <div class="card-lkr">${fmt(p.maxPrice)}</div>
+          <div style="font-size:11px;color:var(--text3)">Offer: ${fmt(p.offerPrice)} · Min: ${fmt(p.minPrice)}</div>
+        </div>
+      </div>
+    </div>`;
+      }).join('');
+    }
+
+    function openModal(type, idx) {
+      const q = document.getElementById('sq-' + type).value.toLowerCase();
+      const s = document.getElementById('ss-' + type).value;
+      let items = (_data[type] || []).slice();
+      if (q) items = items.filter(i => (i.name || '').toLowerCase().includes(q) || (i.code || '').toLowerCase().includes(q) || (i.brand || '').toLowerCase().includes(q));
+      if (s === 'asc') items.sort((a, b) => (a.maxPrice || 0) - (b.maxPrice || 0));
+      else if (s === 'desc') items.sort((a, b) => (b.maxPrice || 0) - (a.maxPrice || 0));
+      else if (s === 'az') items.sort((a, b) => a.name.localeCompare(b.name));
+      const p = items[idx]; if (!p) return;
+      const ms = _data.settings || {};
+      const showNormal = ms.showNormal !== false;
+      const showOffer = ms.showOffer === true;
+      const showMin = ms.showMin === true;
+      const showAud = ms.showAud !== false;
+      let priceBoxes = '';
+      if (showAud) priceBoxes += `<div class="price-box"><div class="price-box-lbl">AUD price</div><div class="price-box-val aud" style="font-size:16px">A$ ${parseFloat(p.aud || 0).toFixed(2)}</div></div>`;
+      if (showNormal) priceBoxes += `<div class="price-box"><div class="price-box-lbl">Normal price</div><div class="price-box-val lkr" style="font-size:16px">${fmt(p.maxPrice || 0)}</div></div>`;
+      if (showOffer) priceBoxes += `<div class="price-box"><div class="price-box-lbl">Offer price</div><div class="price-box-val lkr" style="font-size:16px;color:var(--gold)">${fmt(p.offerPrice || 0)}</div></div>`;
+      if (showMin) priceBoxes += `<div class="price-box"><div class="price-box-lbl">Min price</div><div class="price-box-val lkr" style="font-size:16px;color:var(--red)">${fmt(p.minPrice || 0)}</div></div>`;
+      if (!priceBoxes) priceBoxes = `<div class="price-box"><div class="price-box-lbl">Normal price</div><div class="price-box-val lkr" style="font-size:16px">${fmt(p.maxPrice || 0)}</div></div>`;
+
+      // Stock info for modal
+      const inStock = p.inStock !== false;
+      const qty = parseInt(p.quantity) || 0;
+      const isOut = !inStock || qty === 0;
+      const isLow = inStock && qty > 0 && qty <= 3;
+      let mChipClass = 'in', mChipText = qty + ' in stock';
+      if (isOut) { mChipClass = 'out'; mChipText = 'Out of stock'; }
+      else if (isLow) { mChipClass = 'low'; mChipText = 'Only ' + qty + ' left'; }
+
+      document.getElementById('modal-body').innerHTML = `
+    <div class="m-code">${p.code || ''} · ${type === 'pharma' ? 'Health & Care' : 'Grocery & Food'}</div>
+    <div class="m-name">${p.name}</div>
+    ${p.brand ? `<div class="m-brand">${p.brand}</div>` : ''}
+    <div style="margin-bottom:1rem"><span class="stock-chip ${mChipClass}" style="font-size:12px;padding:5px 14px"><span class="sdot"></span>${mChipText}</span></div>
+    ${p.desc ? `<div class="m-desc">${p.desc}</div>` : ''}
+    <div class="m-prices" style="grid-template-columns:repeat(auto-fit,minmax(110px,1fr))">${priceBoxes}</div>
+    <button class="m-close" onclick="closeModal()">Close</button>`;
+      document.getElementById('modal').classList.add('open');
+    }
+    function closeModal() { document.getElementById('modal').classList.remove('open'); }
+    function bgClose(e) { if (e.target === document.getElementById('modal')) closeModal(); }
+
+    function buildCalcDropdown() {
+      const sel = document.getElementById('cp-sel');
+      const hg = document.createElement('optgroup'); hg.label = 'Personal & Health Care';
+      const fg = document.createElement('optgroup'); fg.label = 'Grocery & Food';
+      (_data.pharma || []).forEach(p => {
+        const o = document.createElement('option');
+        o.value = JSON.stringify({ name: p.name, aud: p.aud, maxPrice: p.maxPrice, offerPrice: p.offerPrice, minPrice: p.minPrice, cat: 'health' });
+        o.textContent = (p.code ? p.code + ' — ' : '') + p.name.substring(0, 52) + (p.name.length > 52 ? '…' : '');
+        hg.appendChild(o);
+      });
+      (_data.super || []).forEach(p => {
+        const o = document.createElement('option');
+        o.value = JSON.stringify({ name: p.name, aud: p.aud, maxPrice: p.maxPrice, offerPrice: p.offerPrice, minPrice: p.minPrice, cat: 'food' });
+        o.textContent = (p.code ? p.code + ' — ' : '') + p.name.substring(0, 52) + (p.name.length > 52 ? '…' : '');
+        fg.appendChild(o);
+      });
+      sel.appendChild(hg); sel.appendChild(fg);
+    }
+
+    let _calcCat = 'health';
+
+    function setCat(cat, btn) {
+      _calcCat = cat;
+      document.getElementById('cat-h-btn').classList.toggle('active', cat === 'health');
+      document.getElementById('cat-f-btn').classList.toggle('active', cat === 'food');
+      calc();
+    }
+
+    function cpPick() {
+      const v = document.getElementById('cp-sel').value; if (!v) return;
+      const p = JSON.parse(v);
+      document.getElementById('cp-name').value = p.name;
+      document.getElementById('cp-aud').value = p.aud;
+      document.getElementById('cp-ship').value = '';
+      document.getElementById('cp-tax').value = '';
+      window._pickedPrices = { max: p.maxPrice, offer: p.offerPrice, min: p.minPrice };
+      if (p.cat) {
+        _calcCat = p.cat;
+        document.getElementById('cat-h-btn').classList.toggle('active', p.cat === 'health');
+        document.getElementById('cat-f-btn').classList.toggle('active', p.cat === 'food');
+      }
+      calc();
+    }
+
+    function ceiling50(n) { return Math.ceil(n / 50) * 50; }
+    function smartCeil(n) {
+      const c = ceiling50(n);
+      return (c % 100 === 0) ? c - 10 : c;
+    }
+
+    function calc() {
+      const aud = parseFloat(document.getElementById('cp-aud').value) || 0;
+      const rate = parseFloat(document.getElementById('cp-rate').value) || 210;
+      const packIn = parseFloat(document.getElementById('cp-pack').value);
+      const pack = isNaN(packIn) ? 50 : packIn;
+      const box = document.getElementById('res-box');
+      const warn = document.getElementById('cwarn');
+      const note = document.getElementById('fml-note');
+
+      const isHealth = _calcCat === 'health';
+
+      // Profit margins from Meta data sheet
+      const profitNormal = isHealth ? 0.50 : 0.40;
+      const profitOffer = isHealth ? 0.30 : 0.25;
+      const profitMin = isHealth ? 0.20 : 0.15;
+      const bufferPct = isHealth ? 0.10 : 0.05;
+      const taxRate = isHealth ? 0.05 : 0.02;
+
+      note.innerHTML = `<strong>${isHealth ? 'Personal & Health Care' : 'Grocery & Food'} formula:</strong><br>
+    Tax = AUD × ${rate} × ${taxRate * 100}% (auto)<br>
+    Buffer = Total base × ${bufferPct * 100}%<br>
+    Normal profit = ${profitNormal * 100}% · Offer = ${profitOffer * 100}% · Min = ${profitMin * 100}%<br>
+    Rounded to nearest Rs. 50 (avoids round hundreds)`;
+
+      if (!aud) {
+        box.innerHTML = '<div class="res-row"><span class="res-lbl" style="color:var(--text3)">Enter AUD price to calculate</span></div>';
+        warn.style.display = 'none';
+        return;
+      }
+
+      // ── Replicate Excel formulas exactly ─────────────────────────────
+      // F = AUD × rate (Product cost LKR)
+      const costLKR = aud * rate;
+
+      // G = Shipping — use manual override or leave 0 (user enters it)
+      const shipOverride = document.getElementById('cp-ship').value;
+      const ship = shipOverride !== '' ? parseFloat(shipOverride) || 0 : 0;
+
+      // H = Tax = CEILING(AUD × rate × taxRate, 50)  — auto unless overridden
+      const taxOverride = document.getElementById('cp-tax').value;
+      const tax = taxOverride !== '' ? parseFloat(taxOverride) || 0 : ceiling50(aud * rate * taxRate);
+
+      // J = Total base cost
+      const totalBase = costLKR + ship + tax + pack;
+
+      // K/L = Buffer
+      const bufferAmt = totalBase * bufferPct;
+
+      // Normal selling price (50% / 40% profit)
+      const profitNormAmt = totalBase * profitNormal;
+      const normalPrice = smartCeil(totalBase + bufferAmt + profitNormAmt);
+
+      // Offer price (30% / 25% profit)
+      const profitOffAmt = totalBase * profitOffer;
+      const offerPrice = smartCeil(totalBase + bufferAmt + profitOffAmt);
+
+      // Minimum price (20% / 15% profit)
+      const profitMinAmt = totalBase * profitMin;
+      const minPrice = smartCeil(totalBase + bufferAmt + profitMinAmt);
+
+      // Compare to listed prices if product selected
+      const listedMax = window._pickedPrices ? window._pickedPrices.max : null;
+      const listedOffer = window._pickedPrices ? window._pickedPrices.offer : null;
+      const listedMin = window._pickedPrices ? window._pickedPrices.min : null;
+
+      function matchBadge(calc, listed) {
+        if (!listed) return '';
+        const diff = calc - listed;
+        if (Math.abs(diff) <= 50) return ' <span style="font-size:10px;background:#edf5f0;color:#1a5c3a;padding:1px 6px;border-radius:4px">✓ matches</span>';
+        return ` <span style="font-size:10px;background:#fdf1ef;color:#b83224;padding:1px 6px;border-radius:4px">${diff > 0 ? '+' : ''}${Math.round(diff).toLocaleString()} vs listed</span>`;
+      }
+
+      box.innerHTML = `
+    <div style="font-size:12px;color:var(--green);font-weight:500;margin-bottom:8px">${document.getElementById('cp-name').value || 'Product'}</div>
+    <div class="res-row"><span class="res-lbl">AUD price</span><span class="res-val">A$ ${aud.toFixed(2)}</span></div>
+    <div class="res-row"><span class="res-lbl">Cost in LKR (×${rate})</span><span class="res-val">${fmt(costLKR)}</span></div>
+    ${ship > 0 ? `<div class="res-row"><span class="res-lbl">Shipping</span><span class="res-val">+ ${fmt(ship)}</span></div>` : ''}
+    <div class="res-row"><span class="res-lbl">Tax/Customs (${taxRate * 100}%${taxOverride !== '' ? ' override' : ''})</span><span class="res-val">+ ${fmt(tax)}</span></div>
+    <div class="res-row"><span class="res-lbl">Packaging</span><span class="res-val">+ ${fmt(pack)}</span></div>
+    <div class="res-row" style="border-top:1px solid #9fcfb3;margin-top:4px;padding-top:6px"><span class="res-lbl" style="font-weight:600">Total base cost</span><span class="res-val" style="font-weight:600">${fmt(totalBase)}</span></div>
+    <div class="res-row"><span class="res-lbl">Buffer (${bufferPct * 100}%)</span><span class="res-val">+ ${fmt(bufferAmt)}</span></div>
+    <div style="height:1px;background:#9fcfb3;margin:8px 0"></div>
+    <div class="res-row">
+      <span class="res-lbl" style="font-weight:600">🟢 Normal price (${profitNormal * 100}%)</span>
+      <span class="res-val" style="font-size:18px">${fmt(normalPrice)}${matchBadge(normalPrice, listedMax)}</span>
+    </div>
+    <div class="res-row">
+      <span class="res-lbl" style="font-weight:600">🟡 Offer price (${profitOffer * 100}%)</span>
+      <span class="res-val">${fmt(offerPrice)}${matchBadge(offerPrice, listedOffer)}</span>
+    </div>
+    <div class="res-row">
+      <span class="res-lbl" style="font-weight:600">🔴 Minimum price (${profitMin * 100}%)</span>
+      <span class="res-val">${fmt(minPrice)}${matchBadge(minPrice, listedMin)}</span>
+    </div>`;
+
+      warn.style.display = 'none';
+    }
+
+    loadData();
+
+  </script>
+</body>
+
+</html>
